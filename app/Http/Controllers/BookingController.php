@@ -43,10 +43,15 @@ class BookingController extends Controller
                             $start_date = $keyword['start_date'] ?? null;
                             $end_date = $keyword['end_date'] ?? null;
                             if ($start_date && $end_date) {
+                                // Ensure dates are in the same format
+                                $start_date = \Carbon\Carbon::parse($start_date)->startOfDay();
+                                $end_date = \Carbon\Carbon::parse($end_date)->endOfDay();
                                 $bookings->whereBetween('bookings.' . $column, [$start_date, $end_date]);
                             } elseif ($start_date) {
+                                $start_date = \Carbon\Carbon::parse($start_date)->startOfDay();
                                 $bookings->where('bookings.' . $column, '>=', $start_date);
                             } elseif ($end_date) {
+                                $end_date = \Carbon\Carbon::parse($end_date)->endOfDay();
                                 $bookings->where('bookings.' . $column, '<=', $end_date);
                             }
                         } else {
@@ -57,7 +62,7 @@ class BookingController extends Controller
                     }
                 }
             }
-        }
+        }            
 
         $bookings = $bookings->orderBy(DB::raw("CAST(bookings.$sortField AS UNSIGNED)"), $sortDirection)
             ->paginate($itemsPerPage);
