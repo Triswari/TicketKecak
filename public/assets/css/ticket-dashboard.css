@@ -23274,9 +23274,9 @@ p {
 .text-9xl {
   font-size: 5rem;
 }
-.dark-version .sidenav.bg-white {
+/* .dark-version .sidenav.bg-white {
   background: #fff !important;
-}
+} */
 .dark-version .sidenav.bg-white .navbar-nav .nav-link.active:after {
   color: rgba(206, 212, 218, 0.7);
 }
@@ -24930,6 +24930,8 @@ pre[class*=language-] {
   border-radius: 0.5rem;
   transition: box-shadow 0.15s ease, border-color 0.15s ease;
 }
+
+
 
 /* notification */
 .notification-badge {
