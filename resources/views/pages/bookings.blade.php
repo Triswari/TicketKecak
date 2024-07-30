@@ -72,7 +72,7 @@
                                         </div>
                                     @endif
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-4 d-flex align-items-end justify-content-center">
                                     <div class="col-md-12 d-flex justify-content-end">
                                         <button type="submit" class="btn btn-primary mr-2 me-3">Search</button>
                                         <a href="{{ route('bookings') }}" class="btn btn-secondary mr-2 me-3 d-flex align-items-center">Clear</a>
