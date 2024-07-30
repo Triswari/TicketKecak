@@ -21,9 +21,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         label: 'Total Qty Ticket',
                         data: qtyTickets,
                         backgroundColor: labels.map(() => {
-                            const r = Math.floor(Math.random() * 128); // nilai merah antara 0 dan 127
-                            const g = Math.floor(Math.random() * 128); // nilai hijau antara 0 dan 127
-                            const b = Math.floor(Math.random() * 128); // nilai biru antara 0 dan 127
+                            const r = Math.floor(Math.random() * 100); // nilai merah antara 0 dan 99
+                            const g = Math.floor(Math.random() * 100); // nilai hijau antara 0 dan 99
+                            const b = Math.floor(Math.random() * 255); // nilai biru antara 0 dan 254
                             return `rgba(${r}, ${g}, ${b}, 0.6)`;
                         }),
                         borderColor: labels.map(() => `#344767`),
@@ -45,9 +45,9 @@ document.addEventListener('DOMContentLoaded', function() {
                                     const value = context.raw || 0;
                                     console.log('Value:', value);
                                     console.log('Total Tickets:', totalTickets);
-                                    const percentage = totalTickets ? ((value / totalTickets) * 100).toFixed(2) + '%' : '0.00%';
+                                    const percentage = totalTickets > 50 ? '' : totalTickets ? ` (${((value / totalTickets) * 100).toFixed(2)}%)` : ' (0.00%)';
                                     console.log('Percentage:', percentage);
-                                    return `${label}: ${value} (${percentage})`;
+                                    return `${label}: ${value}${percentage}`;
                                 }
                             }
                         },
@@ -55,6 +55,9 @@ document.addEventListener('DOMContentLoaded', function() {
                             formatter: (value, ctx) => {
                                 console.log('Value:', value);
                                 console.log('Total Tickets:', totalTickets);
+                                if (totalTickets > 50) {
+                                    return ''; // Tidak tampilkan persentase jika lebih dari 50
+                                }
                                 const percentage = totalTickets ? ((value / totalTickets) * 100).toFixed(2) + '%' : '0.00%';
                                 console.log('Percentage:', percentage);
                                 return percentage;
