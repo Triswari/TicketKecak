@@ -90,7 +90,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+            <div class="col-xl-3 col-sm-6 mb-xl-0">
                 <div class="card">
                     <div class="card-body p-3">
                         <div class="row">
@@ -405,7 +405,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+            <div class="col-xl-3 col-sm-6 mb-xl-0">
                 <div class="card">
                     <div class="card-body p-3">
                         <div class="row">
@@ -696,7 +696,7 @@
                                         </div>
                                     @endif
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-4 d-flex align-items-end justify-content-center">
                                     <div class="col-md-12 d-flex justify-content-end">
                                         <button type="submit" class="btn btn-primary mr-2 me-3">Search</button>
                                         <a href="{{ route('home') }}" class="btn btn-secondary mr-2 me-3 d-flex align-items-center">Clear</a>
