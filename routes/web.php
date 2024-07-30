@@ -45,7 +45,7 @@ Route::get('/login', [LoginController::class, 'show'])->middleware('guest')->nam
 Route::post('/login', [LoginController::class, 'login'])->middleware('guest')->name("login.perform");
 
 Route::get('auth/google', [GoogleController::class, 'redirectToGoogle']);
-Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
+Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallBack']);
 
 
 // Password reset routes
