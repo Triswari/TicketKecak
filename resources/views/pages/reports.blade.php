@@ -19,7 +19,7 @@
                                         <p class="font-weight-bold mb-1">End Date</p>
                                         <input type="date" name="end_date" id="end_date" class="form-control" placeholder="End Date" value="{{ request()->get('end_date') }}">
                                     </div>
-                                    <div class="col-md-2 d-flex align-items-end">
+                                    <div class="col-md-2 d-flex align-items-end mt-2">
                                         <button type="button" class="btn btn-secondary mb-0 px-5" onclick="clearDates()">Clear</button>
                                     </div>
                                 </div>
@@ -230,7 +230,7 @@
                                         </div>
                                     @endif
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-4 d-flex align-items-end justify-content-center">
                                     <div class="col-md-12 d-flex justify-content-end">
                                         <button type="submit" class="btn btn-primary mr-2 me-3">Search</button>
                                         <a href="{{ route('reports') }}" class="btn btn-secondary mr-2 me-3 d-flex align-items-center">Clear</a>
