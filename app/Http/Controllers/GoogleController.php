@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
-use App\Models\User; // Pastikan model User diimpor
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class GoogleController extends Controller
 {
@@ -17,26 +18,33 @@ class GoogleController extends Controller
     public function handleGoogleCallBack()
     {
         try {
-            $user = Socialite::driver('google')->user();
+            $googleUser = Socialite::driver('google')->user();
 
-            $findUser = User::where('id', $user->id)->first();
+            // Mencari pengguna berdasarkan google_id
+            $findUser = User::where('google_id', $googleUser->id)->first();
 
             if ($findUser) {
                 Auth::login($findUser);
-                return redirect()->intended('pages.dashboard');
+                return redirect('/dashboard');
             } else {
+                // Gunakan nama pengguna dari Google atau alamat email sebagai username
+                $username = $googleUser->name ?? $googleUser->email;
+
+                // Buat pengguna baru
                 $newUser = User::create([
-                    'name' => $user->name,
-                    'email' => $user->email,
-                    'id' => $user->id,
+                    'username' => $username,
+                    'email' => $googleUser->email,
+                    'google_id' => $googleUser->id,
+                    'password' => bcrypt(Str::random(16)),
                     'email_verified_at' => now(),
                 ]);
 
                 Auth::login($newUser);
-                return redirect()->intended('pages.dashboard');
+                return redirect('/dashboard');
             }
         } catch (\Throwable $th) {
             dd($th->getMessage());
         }
     }
 }
+
