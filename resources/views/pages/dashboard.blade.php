@@ -10,14 +10,13 @@
             <div class="col-12 mb-4">
                 <div class="card">
                     <div class="card-body p-3">
-                    <form method="GET" action="{{ route('home') }}" onsubmit="return validateDates()">
-                        <div class="row">
+                        <form id="filterForm" method="GET">
                             <div class="row">
                                 <div class="col-md-4"> Start Date
-                                    <input type="date" name="start_date" id="start_date" class="form-control" placeholder="Start Date" value="{{ request('start_date', $startDate) }}">
+                                    <input type="date" name="start_date" id="start_date" class="form-control" placeholder="Start Date" value="{{ request('start_date') }}">
                                 </div>
                                 <div class="col-md-4"> End Date
-                                    <input type="date" name="end_date" id="end_date" class="form-control" placeholder="End Date" value="{{ request('end_date', $endDate) }}">
+                                    <input type="date" name="end_date" id="end_date" class="form-control" placeholder="End Date" value="{{ request('end_date') }}">
                                 </div>
                                 <div class="col-md-2 d-flex align-items-end justify-content-center">
                                     <button type="submit" class="btn btn-info mb-0 px-5 mt-2">Filter</button>
@@ -27,8 +26,7 @@
                                 </div>
                             </div>
                             <div id="start_date_error" class="text-danger mt-1 text-sm"></div> <!-- Error message div -->
-                        </div>
-                    </form>
+                        </form>
                     </div>
                 </div>
             </div>
