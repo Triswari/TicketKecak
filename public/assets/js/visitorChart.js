@@ -1,76 +1,108 @@
 document.addEventListener('DOMContentLoaded', function() {
-    fetch('/visitor-data')
-        .then(response => response.json())
-        .then(data => {
-            console.log('Data from server:', data);
+    function fetchVisitorData(startDate, endDate) {
+        const url = new URL('/visitor-data', window.location.origin);
+        if (startDate) url.searchParams.append('start_date', startDate);
+        if (endDate) url.searchParams.append('end_date', endDate);
 
-            const labels = data.map(item => item.nationality);
-            const qtyTickets = data.map(item => parseInt(item.total_qty_ticket, 10)); // Pastikan nilai ini adalah angka
-            const totalTickets = qtyTickets.reduce((acc, curr) => acc + curr, 0);
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                const labels = data.map(item => item.nationality);
+                const qtyTickets = data.map(item => item.total_qty_ticket);
 
-            console.log('Labels:', labels);
-            console.log('Qty Tickets:', qtyTickets);
-            console.log('Total Tickets:', totalTickets);
-
-            const ctx = document.getElementById('visitorChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Total Qty Ticket',
-                        data: qtyTickets,
-                        backgroundColor: labels.map(() => {
-                            const r = Math.floor(Math.random() * 100); // nilai merah antara 0 dan 99
-                            const g = Math.floor(Math.random() * 100); // nilai hijau antara 0 dan 99
-                            const b = Math.floor(Math.random() * 255); // nilai biru antara 0 dan 254
-                            return `rgba(${r}, ${g}, ${b}, 0.6)`;
-                        }),
-                        borderColor: labels.map(() => `#344767`),
-                        borderWidth: 2
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: true,
-                            position: 'right',
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    const label = context.label || '';
-                                    const value = context.raw || 0;
-                                    console.log('Value:', value);
-                                    console.log('Total Tickets:', totalTickets);
-                                    const percentage = totalTickets > 50 ? '' : totalTickets ? ` (${((value / totalTickets) * 100).toFixed(2)}%)` : ' (0.00%)';
-                                    console.log('Percentage:', percentage);
-                                    return `${label}: ${value}${percentage}`;
-                                }
+                const ctx = document.getElementById('visitorChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Total Qty Ticket',
+                            data: qtyTickets,
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false,
                             }
                         },
-                        datalabels: {
-                            formatter: (value, ctx) => {
-                                console.log('Value:', value);
-                                console.log('Total Tickets:', totalTickets);
-                                if (totalTickets > 50) {
-                                    return ''; // Tidak tampilkan persentase jika lebih dari 50
+                        interaction: {
+                            intersect: false,
+                            mode: 'index',
+                        },
+                        scales: {
+                            y: {
+                                grid: {
+                                    drawBorder: false,
+                                    display: true,
+                                    drawOnChartArea: true,
+                                    drawTicks: false,
+                                    borderDash: [5, 5]
+                                },
+                                ticks: {
+                                    display: true,
+                                    padding: 10,
+                                    color: '#344767',
+                                    font: {
+                                        size: 11,
+                                        family: "Open Sans",
+                                        style: 'normal',
+                                        lineHeight: 2
+                                    },
                                 }
-                                const percentage = totalTickets ? ((value / totalTickets) * 100).toFixed(2) + '%' : '0.00%';
-                                console.log('Percentage:', percentage);
-                                return percentage;
                             },
-                            color: '#fff',
-                            font: {
-                                weight: 'bold'
-                            }
-                        }                        
-                    }
-                },
-                plugins: [ChartDataLabels]
-            });
-        })
-        .catch(error => console.error('Error fetching visitor data:', error));
+                            x: {
+                                grid: {
+                                    drawBorder: false,
+                                    display: false,
+                                    drawOnChartArea: false,
+                                    drawTicks: false,
+                                    borderDash: [5, 5]
+                                },
+                                ticks: {
+                                    display: true,
+                                    color: '#344767',
+                                    padding: 20,
+                                    font: {
+                                        size: 11,
+                                        family: "Open Sans",
+                                        style: 'normal',
+                                        lineHeight: 2
+                                    },
+                                }
+                            },
+                        },
+                    },
+                });
+            })
+            .catch(error => console.error('Error fetching visitor data:', error));
+    }
+
+    // Get dates from URL if available
+    const urlParams = new URLSearchParams(window.location.search);
+    const startDate = urlParams.get('start_date');
+    const endDate = urlParams.get('end_date');
+
+    // Fetch data when page loads
+    fetchVisitorData(startDate, endDate);
+
+    // Add event listener to the form to fetch data on submit
+    document.getElementById('filterForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent default form submission
+        const startDate = document.getElementById('start_date').value;
+        const endDate = document.getElementById('end_date').value;
+        fetchVisitorData(startDate, endDate);
+    });
 });
+
+function clearDates() {
+    document.getElementById('start_date').value = '';
+    document.getElementById('end_date').value = '';
+    // Trigger form submit to reload chart with no dates
+    document.getElementById('filterForm').dispatchEvent(new Event('submit'));
+}
