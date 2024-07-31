@@ -187,20 +187,40 @@ class BookingController extends Controller
     }
 
     // Fungsi Chart
-    public function getVisitorData()
+    public function getVisitorData(Request $request)
     {
-        // Join bookings and customers tables and group by nationality
-        $visitorData = Booking::join('customers', 'bookings.id_customer', '=', 'customers.id_customer')
-            ->selectRaw('customers.nationality, SUM(bookings.qty_ticket) as total_qty_ticket')
-            ->groupBy('customers.nationality')
-            ->get();
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+    
+        // Format tanggal jika ada
+        if ($startDate) {
+            $startDate = \Carbon\Carbon::parse($startDate)->startOfDay();
+        }
+        if ($endDate) {
+            $endDate = \Carbon\Carbon::parse($endDate)->endOfDay();
+        }
+    
+        // Query untuk mendapatkan data visitor
+        $visitorDataQuery = BookingDetail::selectRaw('nationality, SUM(qty_ticket) as total_qty_ticket')
+            ->groupBy('nationality');
+    
+        // Apply date filters if both dates are present
+        if ($startDate && $endDate) {
+            $visitorDataQuery->whereBetween('created_at', [$startDate, $endDate]);
+        } elseif ($startDate) {
+            $visitorDataQuery->where('created_at', '>=', $startDate);
+        } elseif ($endDate) {
+            $visitorDataQuery->where('created_at', '<=', $endDate);
+        }
+    
+        $visitorData = $visitorDataQuery->get();
     
         // Log the data to check if it's correct
         \Log::info('Visitor Data:', $visitorData->toArray());
     
         return response()->json($visitorData);
     }
-    
+        
     // Fungsi get data ticket & add untuk form
     public function getNamePriceAdd($id_add)
     {
