@@ -156,6 +156,6 @@ Route::delete('/notification/{id}', [NotificationController::class, 'destroy'])-
 Route::get('/reports', [ReportController::class, 'report'])->name('reports')->middleware('auth');
 Route::get('reports/export', [ReportController::class, 'export_excel'])->middleware('auth');
 // chart routes
-Route::get('/visitor-data', [BookingController::class, 'getVisitorData'])->name('visitor.data')->middleware('auth');
+Route::get('/visitor-data', [BookingController::class, 'getVisitorData'])->name('visitor-data')->middleware('auth');
 
 
